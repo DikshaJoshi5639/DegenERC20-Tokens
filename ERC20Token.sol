@@ -10,10 +10,17 @@ contract DegenToken is ERC20, ERC20Burnable, Ownable {
     string[] public items;
 
     constructor(address initialOwner) ERC20("Degen", "DGN") Ownable(initialOwner) {
+    }
+
+    function swags() external onlyOwner {
         items = ["Sword", "Shield", "Potion"];
-        itemPrices["Sword"] = 0.10 ether;
-        itemPrices["Shield"] = 0.5 ether;
-        itemPrices["Potion"] = 0.2 ether;
+        itemPrices["Sword"] = 10 ether;
+        itemPrices["Shield"] = 5 ether;
+        itemPrices["Potion"] = 2 ether;
+    }
+
+    function decimals() public pure override returns (uint8) {
+        return 0;
     }
 
     function redeemItem(string memory itemName) public payable {
@@ -32,6 +39,10 @@ contract DegenToken is ERC20, ERC20Burnable, Ownable {
         _mint(recipient, amount);
     }
 
+    function burnTokens(uint256 amount) external {
+        _burn(msg.sender, amount);
+    }
+
     function checkTokenBalance(address account) external view returns (uint256) {
         return balanceOf(account);
     }
@@ -48,4 +59,3 @@ contract DegenToken is ERC20, ERC20Burnable, Ownable {
         return symbol();
     }
 }
-
