@@ -17,9 +17,10 @@ DegenToken on Avalanche empowers Degen Gaming, offering minting, transfers, and 
 To run this program, you can use Remix, an online Solidity IDE. To get started, go to the Remix website at https://remix.ethereum.org/
 
 ### Executing program
-1.Now after opening the link you will click on the "File Explorer" option on the extreme left of the screen,then click on "create new file". 
-2.Save the file with .sol extension (For Eg. myTokens.sol). 
-3.Copy paste the following code on your remix platform.
+1. Now after opening the link you will click on the "File Explorer" option on the extreme left of the screen,then click on "create new file".
+2. Save the file with .sol extension (For Eg. myTokens.sol).
+3. Copy paste the following code on your remix platform.
+
 ```
 // Your task is to create a ERC20 token and deploy it on the Avalanche network for Degen Gaming. The smart contract should have the following functionality:
 
