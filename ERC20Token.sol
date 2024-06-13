@@ -1,3 +1,13 @@
+// Your task is to create a ERC20 token and deploy it on the Avalanche network for Degen Gaming. The smart contract should have the following functionality:
+
+// Minting new tokens: The platform should be able to create new tokens and distribute them to players as rewards. Only the owner can mint tokens.
+// Transferring tokens: Players should be able to transfer their tokens to others.
+// Redeeming tokens: Players should be able to redeem their tokens for items in the in-game store.
+// Checking token balance: Players should be able to check their token balance at any time.
+// Burning tokens: Anyone should be able to burn tokens, that they own, that are no longer needed.
+
+
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
@@ -29,21 +39,21 @@ contract DegenToken is ERC20, ERC20Burnable, Ownable {
         _burn(msg.sender, itemPrices[itemName]);
     }
 
-    function transferTokens(address recipient, uint256 amount) public returns (bool) {
+    function transferTokens(address recipient, uint amount) public returns (bool) {
         require(amount > 0, "Amount should be greater than zero.");
         _transfer(_msgSender(), recipient, amount);
         return true;
     }
 
-    function mintTokens(address recipient, uint256 amount) external onlyOwner {
+    function mintTokens(address recipient, uint amount) external onlyOwner {
         _mint(recipient, amount);
     }
 
-    function burnTokens(uint256 amount) external {
+    function burnTokens(uint amount) external {
         _burn(msg.sender, amount);
     }
 
-    function checkTokenBalance(address account) external view returns (uint256) {
+    function checkTokenBalance(address account) external view returns (uint) {
         return balanceOf(account);
     }
 
