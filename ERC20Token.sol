@@ -7,7 +7,6 @@
 // Burning tokens: Anyone should be able to burn tokens, that they own, that are no longer needed.
 
 
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
@@ -23,9 +22,13 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
         uint bomb;
     }
 
-    enum Swags { Tshirt, Sword, Hat, Bomb }
-
     mapping(address => PlayerItems) public playerItems;
+
+    // Numerical identifiers for items
+    uint constant TSHIRT = 1;
+    uint constant SWORD = 2;
+    uint constant HAT = 3;
+    uint constant BOMB = 4;
 
     constructor() ERC20("Degen", "DGN") Ownable(msg.sender) {}
 
@@ -33,33 +36,28 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
         _mint(_to, _amount);
     }
 
-    // Transfer tokens to another player
     function transferTokens(address _to, uint256 _amount) public {
         require(_amount <= balanceOf(msg.sender), "Low degen");
         _transfer(msg.sender, _to, _amount);
     }
 
-    // Redeem different items using enum Swags
-    function redeemItem(Swags _swag) public {
-        uint256 price;
-        if (_swag == Swags.Tshirt) {
-            price = 100; 
+    function redeemItem(uint _itemId, uint256 _price) public {
+        require(_itemId >= TSHIRT && _itemId <= BOMB, "Invalid item ID");
+        require(balanceOf(msg.sender) >= _price, "Insufficient balance");
+
+        if (_itemId == TSHIRT) {
             playerItems[msg.sender].tshirt += 1;
-        } else if (_swag == Swags.Sword) {
-            price = 200; 
+        } else if (_itemId == SWORD) {
             playerItems[msg.sender].sword += 1;
-        } else if (_swag == Swags.Hat) {
-            price = 150; 
+        } else if (_itemId == HAT) {
             playerItems[msg.sender].hat += 1;
-        } else if (_swag == Swags.Bomb) {
-            price = 300; 
+        } else if (_itemId == BOMB) {
             playerItems[msg.sender].bomb += 1;
         } else {
-            revert("Invalid swag selected");
+            revert("Invalid item ID");
         }
 
-        require(balanceOf(msg.sender) >= price, "Insufficient balance");
-        _burn(msg.sender, price);
+        _burn(msg.sender, _price);
     }
 
     function burn(address _of, uint256 _amount) public {
@@ -70,4 +68,3 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
         return balanceOf(msg.sender);
     }
 }
-
