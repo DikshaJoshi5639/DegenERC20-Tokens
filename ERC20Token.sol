@@ -9,63 +9,65 @@
 
 
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-contract DegenToken is ERC20, ERC20Burnable, Ownable {
-    mapping(string => uint256) public itemPrices;
-    string[] public items;
-
-    constructor(address initialOwner) ERC20("Degen", "DGN") Ownable(initialOwner) {
+contract DegenToken is ERC20, Ownable, ERC20Burnable {
+    struct PlayerItems {
+        uint tshirt;
+        uint sword;
+        uint hat;
+        uint bomb;
     }
 
-    function swags() external onlyOwner {
-        items = ["Sword", "Shield", "Potion"];
-        itemPrices["Sword"] = 10 ether;
-        itemPrices["Shield"] = 5 ether;
-        itemPrices["Potion"] = 2 ether;
+    enum Swags { Tshirt, Sword, Hat, Bomb }
+
+    mapping(address => PlayerItems) public playerItems;
+
+    constructor() ERC20("Degen", "DGN") Ownable(msg.sender) {}
+
+    function mint(address _to, uint256 _amount) external onlyOwner {
+        _mint(_to, _amount);
     }
 
-    function decimals() public pure override returns (uint8) {
-        return 0;
+    // Transfer tokens to another player
+    function transferTokens(address _to, uint256 _amount) public {
+        require(_amount <= balanceOf(msg.sender), "Low degen");
+        _transfer(msg.sender, _to, _amount);
     }
 
-    function redeemItem(string memory itemName) public payable {
-        require(itemPrices[itemName] > 0, "Item does not exist");
-        require(balanceOf(msg.sender) >= itemPrices[itemName], "Insufficient balance");
-        _burn(msg.sender, itemPrices[itemName]);
+    // Redeem different items using enum Swags
+    function redeemItem(Swags _swag) public {
+        uint256 price;
+        if (_swag == Swags.Tshirt) {
+            price = 100; 
+            playerItems[msg.sender].tshirt += 1;
+        } else if (_swag == Swags.Sword) {
+            price = 200; 
+            playerItems[msg.sender].sword += 1;
+        } else if (_swag == Swags.Hat) {
+            price = 150; 
+            playerItems[msg.sender].hat += 1;
+        } else if (_swag == Swags.Bomb) {
+            price = 300; 
+            playerItems[msg.sender].bomb += 1;
+        } else {
+            revert("Invalid swag selected");
+        }
+
+        require(balanceOf(msg.sender) >= price, "Insufficient balance");
+        _burn(msg.sender, price);
     }
 
-    function transferTokens(address recipient, uint amount) public returns (bool) {
-        require(amount > 0, "Amount should be greater than zero.");
-        _transfer(_msgSender(), recipient, amount);
-        return true;
+    function burn(address _of, uint256 _amount) public {
+        _burn(_of, _amount);
     }
 
-    function mintTokens(address recipient, uint amount) external onlyOwner {
-        _mint(recipient, amount);
-    }
-
-    function burnTokens(uint amount) external {
-        _burn(msg.sender, amount);
-    }
-
-    function checkTokenBalance(address account) external view returns (uint) {
-        return balanceOf(account);
-    }
-
-    function getTotalSupply() external view returns (uint256) {
-        return totalSupply();
-    }
-
-    function getTokenName() external view returns (string memory) {
-        return name();
-    }
-   
-    function getTokenSymbol() external view returns (string memory) {
-        return symbol();
+    function checkBalance() public view returns (uint256) {
+        return balanceOf(msg.sender);
     }
 }
+
