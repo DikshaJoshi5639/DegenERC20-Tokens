@@ -9,8 +9,8 @@ DegenToken on Avalanche empowers Degen Gaming, offering minting, transfers, and 
 1. mintTokens(address recipient, uint amount): This function is used to add tokens to the owner address. This is only accessed by the owner and anyother user with different address cannot upgrade it.
 2. burnTokens(uint amount): This function is used to burn tokens from of the owner account and it can be accessed by any other user as well.
 3. transferTokens(address recipient, uint amount): This functions helps user to transfer their own tokens through it.
-4. redeemItem(string memory itemName) : This function will reedem particular items which the user selects.
-5. checkTokenBalance(address account): This will check the total token balance available with the user.
+4. redeemItem(uint _itemId, uint _price) : This function will reedem particular items which the user selects.
+5. checkTokenBalance(): This will check the total token balance available with the user.
 6. onlyOwner(): This is the modifier which ensures that only the owner of the contract can call functions that use this modifier.
 
 ## Getting Started
