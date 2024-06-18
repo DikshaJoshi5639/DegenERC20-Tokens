@@ -41,7 +41,7 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
         _transfer(msg.sender, _to, amt);
     }
 
-    function redeemItem(uint _itemId, uint256 _price) public {
+    function redeemItem(uint _itemId, uint _price) public {
         require(_itemId >= TSHIRT && _itemId <= BOMB, "Invalid item ID");
         require(balanceOf(msg.sender) >= _price, "Insufficient balance");
 
