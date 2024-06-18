@@ -32,13 +32,13 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
 
     constructor() ERC20("Degen", "DGN") Ownable(msg.sender) {}
 
-    function mint(address _to, uint256 _amount) external onlyOwner {
-        _mint(_to, _amount);
+    function mint(address _to, uint amt) external onlyOwner {
+        _mint(_to, amt);
     }
 
-    function transferTokens(address _to, uint256 _amount) public {
-        require(_amount <= balanceOf(msg.sender), "Low degen");
-        _transfer(msg.sender, _to, _amount);
+    function transferTokens(address _to, uint amt) public {
+        require(amt <= balanceOf(msg.sender), "Low degen");
+        _transfer(msg.sender, _to, amt);
     }
 
     function redeemItem(uint _itemId, uint256 _price) public {
@@ -60,11 +60,11 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
         _burn(msg.sender, _price);
     }
 
-    function burn(address _of, uint256 _amount) public {
-        _burn(_of, _amount);
+    function burn(address _of, uint amt) public {
+        _burn(_of, amt);
     }
 
-    function checkBalance() public view returns (uint256) {
+    function checkBalance() public view returns (uint) {
         return balanceOf(msg.sender);
     }
 }
